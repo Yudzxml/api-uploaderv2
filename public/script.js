@@ -7,8 +7,18 @@ document.getElementById('uploadForm').addEventListener('submit', function (e) {
 
   // Ambil file yang dipilih dari input
   const fileInput = document.getElementById('fileInput');
+  const file = fileInput.files[0];
+
+  // Validasi jika tidak ada file yang dipilih
+  if (!file) {
+    alert('Silakan pilih file untuk di-upload.');
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('uploadBtn').style.display = 'block';
+    return;
+  }
+
   const formData = new FormData();
-  formData.append('file', fileInput.files[0]);
+  formData.append('file', file);
 
   // Lakukan upload ke server
   fetch('/api/upload', { // Sesuaikan URL endpoint dengan server Anda

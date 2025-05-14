@@ -1,0 +1,181 @@
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #121212;
+  color: #e0e0e0;
+  line-height: 1.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+  text-align: center;
+}
+
+/* Header */
+header {
+  background-color: #1f1f1f;
+  color: #fff;
+  padding: 30px 0;
+  text-align: center;
+  margin-bottom: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+header p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+/* Upload Section */
+.upload-section {
+  background-color: #1f1f1f;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upload-section form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upload-section label {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #b0b0b0;
+  font-weight: bold;
+}
+
+.upload-section input[type="file"] {
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  background-color: #333;
+  color: #e0e0e0;
+}
+
+.upload-section input[type="file"]:focus {
+  border-color: #28a745;
+  outline: none;
+}
+
+.upload-section .btn {
+  padding: 12px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background-color 0.3s;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 10px;
+}
+
+.upload-section .btn:hover {
+  background-color: #218838;
+}
+
+.upload-section .btn:active {
+  background-color: #1e7e34;
+}
+
+/* Loading Spinner */
+.loading {
+  display: none; /* Disembunyikan secara default */
+  margin: 1rem auto;
+  border: 6px solid #eaeaea;
+  border-top: 6px solid #007bff; /* Ganti dengan warna utama */
+  border-radius: 50%;
+  width: 50px; /* Lebih besar agar lebih terlihat */
+  height: 50px;
+  animation: spin 1s linear infinite, pulse 1.5s ease-in-out infinite; /* Tambahkan animasi pulse */
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Tambahkan shadow */
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Result Box */
+.result-box {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #2a2a2a;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  word-break: break-all;
+  text-align: center;
+  font-size: 1.1rem;
+  color: #e0e0e0;
+}
+
+.result-box h3 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.result-box p {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+#fileUrl {
+  font-weight: bold;
+  color: #007bff;
+  word-wrap: break-word;
+}
+
+/* Footer */
+footer {
+  background-color: #1f1f1f;
+  color: white;
+  padding: 15px 0;
+  text-align: center;
+  margin-top: 50px;
+  width: 100%;
+  border-radius: 8px;
+}
+
+footer p {
+  font-size: 0.9rem;
+}

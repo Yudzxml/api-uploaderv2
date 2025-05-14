@@ -1,61 +1,63 @@
-const Busboy = require('busboy');
+const fs = require('fs');
 const axios = require('axios');
 const { fromBuffer } = require('file-type');
 
 module.exports.config = {
   api: {
-    bodyParser: false,
+    bodyParser: false, // Disable bodyParser from Vercel
   },
 };
 
-module.exports = async (req, res) => {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Metode tidak diizinkan' });
   }
 
-  const busboy = Busboy({ headers: req.headers });
   const chunks = [];
-  let mimeType = '';
-  let fileName = '';
 
-  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-    fileName = filename;
-    mimeType = mimetype;
-
-    file.on('data', (data) => {
-      chunks.push(data);
-    });
-
-    file.on('end', () => {
-      console.log(`File [${filename}] upload selesai.`);
-    });
+  // Menerima data chunk per chunk dari request
+  req.on('data', chunk => {
+    chunks.push(chunk); // Menyimpan chunk dalam array
   });
 
-  busboy.on('finish', async () => {
-    try {
-      const buffer = Buffer.concat(chunks);
-      const type = await fromBuffer(buffer);
-      if (!type) return res.status(400).json({ error: 'MIME tidak valid' });
+  req.on('error', (err) => {
+    console.error('Error while receiving data:', err);
+    return res.status(500).json({ error: 'Error receiving file data' });
+  });
 
-      const finalName = Date.now() + '.' + type.ext;
+  req.on('end', async () => {
+    try {
+      const buffer = Buffer.concat(chunks); // Menggabungkan semua chunk menjadi buffer
+
+      // Mendapatkan MIME type dari file menggunakan file-type
+      const result = await fromBuffer(buffer);
+      const mime = result?.mime;
+
+      if (!mime) {
+        return res.status(400).json({ error: 'Mime tidak valid' });
+      }
+
+      const fileName = Date.now() + '.' + mime.split('/')[1];
       const folder = 'uploads';
 
+      // Mendapatkan URL signed untuk upload file
       const getSigned = await axios.post("https://pxpic.com/getSignedUrl", {
-        folder,
-        fileName: finalName,
+        folder, fileName
+      }, {
+        headers: { "Content-Type": "application/json" }
       });
 
+      // Upload file ke server tujuan menggunakan URL signed
       await axios.put(getSigned.data.presignedUrl, buffer, {
-        headers: { "Content-Type": type.mime }
+        headers: { "Content-Type": mime }
       });
 
-      const fileUrl = `https://files.fotoenhancer.com/uploads/${finalName}`;
-      res.status(200).json({ fileUrl, mime: type.mime });
+      const fileUrl = `https://files.fotoenhancer.com/uploads/${fileName}`;
+      res.json({ status: 200, fileUrl, mime });
+
     } catch (e) {
-      console.error('Upload error:', e);
+      console.error("Error during file processing:", e);
       res.status(500).json({ error: e.message });
     }
   });
-
-  req.pipe(busboy);
 };
